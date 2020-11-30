@@ -1,18 +1,18 @@
 const express = require("express");
 const router = express.Router();
-const isAuthenticated = require('../middlewares/isAuthenticated');
+const isAuthenticated = require("../middlewares/isAuthenticated");
 const {
   registerController,
   loginController,
 } = require("../controllers/authController");
+const { getUrl, createUrl } = require("../controllers/urlController");
 
 router.post("/register", registerController);
 router.post("/login", loginController);
+router.get("/:id", getUrl);
 
 router.use(isAuthenticated);
 
-router.get('/auth', (req,res)=>{
-  res.status(200).json('isAuth');
-});
+router.post("/url", createUrl);
 
 module.exports = router;
