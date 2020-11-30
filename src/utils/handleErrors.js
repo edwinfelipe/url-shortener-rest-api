@@ -17,7 +17,7 @@ const handleErrors = (err) => {
       console.log(err);
     return {
       status: 500,
-      err: "Unknown server error",
+      message: "Unknown server error",
     };
   }
 };
