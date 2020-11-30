@@ -34,7 +34,7 @@ const UserSchema = new Schema({
       message: "The password must be at least 8 characters",
     },
   },
-  userName: { type: String },
+  username: { type: String },
   createdAt: { type: Date, default: Date.now },
 });
 
@@ -42,6 +42,15 @@ UserSchema.pre("save", async function () {
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(this.password, salt);
   this.password = hash;
+
+  const baseUsername = (this.name + this.lastName).toLowerCase();
+  const regex = "^" + baseUsername + "$";
+  const length = (
+    await User.find({
+      name: { $regex: new RegExp(regex) },
+    })
+  ).length;
+  this.username = length === 0 ? baseUsername : baseUsername + length;
 });
 
 UserSchema.method("toJSON", function () {
@@ -53,5 +62,5 @@ UserSchema.method("toJSON", function () {
 UserSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
-
-module.exports = model("User", UserSchema);
+const User = model("User", UserSchema);
+module.exports = User;

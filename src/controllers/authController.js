@@ -8,6 +8,7 @@ const registerController = async (req, res) => {
     const { name, lastName, email, password } = req.body;
     const newUser = new User({ name, lastName, email, password });
     const user = await newUser.save();
+    console.log(user);
     res.status(201).json(user.toJSON());
   } catch (e) {
     const error = handleErrors(e);
